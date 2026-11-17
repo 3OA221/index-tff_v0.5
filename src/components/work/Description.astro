@@ -1,0 +1,44 @@
+---
+import { fmt, ui, type Lang } from '../../i18n/ui';
+import { paragraphs } from '../../lib/media';
+import type { Project } from '../../lib/projects';
+
+interface Props {
+  lang: Lang;
+  project: Project;
+}
+const { lang, project: p } = Astro.props;
+const t = ui.en;
+const d = p.description;
+const originalLang = d.lang;
+const langName = originalLang === 'sk' ? t.langSk : t.langCs;
+---
+
+<div class="desc">
+  {
+    lang === 'cs' ? (
+      <div class="desc__text" lang={originalLang}>
+        {paragraphs(d.original).map((para) => (
+          <p>{para}</p>
+        ))}
+      </div>
+    ) : (
+      <>
+        <div class="desc__text">
+          {paragraphs(d.en).map((para) => (
+            <p>{para}</p>
+          ))}
+        </div>
+        <p class="desc__note">{t.draftNote}</p>
+        <div class="desc__original">
+          <p class="desc__label">{fmt(t.original, { lang: langName })}</p>
+          <div class="desc__text desc__text--original" lang={originalLang}>
+            {paragraphs(d.original).map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
+        </div>
+      </>
+    )
+  }
+</div>

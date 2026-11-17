@@ -1,0 +1,74 @@
+---
+import WorkVideos from './WorkVideos.astro';
+import { fmt, ui, type Lang } from '../../i18n/ui';
+import { placeImages } from '../../lib/media';
+import { imgPath } from '../../lib/paths';
+import type { Project } from '../../lib/projects';
+
+interface Props {
+  lang: Lang;
+  project: Project;
+}
+const { lang, project: p } = Astro.props;
+const t = ui[lang];
+const { grid, items } = placeImages(p.media.images);
+const hasImages = items.length > 0;
+const hasEmbeds = p.media.videoEmbed.length > 0;
+// A video without an ID yet and no images: the cover as a poster with an inactive play button.
+const showPoster = p.media.hasVideo && !hasEmbeds && !hasImages;
+
+// Media column: about 55% of the main column from 1100px, full width below.
+const sizesFull = '(min-width: 1100px) 46vw, (min-width: 900px) 64vw, 100vw';
+const sizesHalf = '(min-width: 1100px) 23vw, (min-width: 900px) 32vw, (min-width: 640px) 50vw, 100vw';
+---
+
+{
+  (hasImages || hasEmbeds || showPoster) && (
+    <div class="media">
+      {hasEmbeds && !hasImages && <WorkVideos project={p} />}
+      {hasImages && (
+        <ul class:list={['media__images', { 'media__images--grid': grid }]} aria-label={t.images}>
+          {items.map(({ image, full }, i) => (
+            <li class:list={['media__item', { 'media__item--full': full }]}>
+              <button
+                type="button"
+                class="media__open"
+                data-lightbox-index={i}
+                data-full={imgPath(image.src)}
+                data-w={image.w}
+                data-h={image.h}
+              >
+                <span class="visually-hidden">{fmt(t.enlarge, { n: i + 1 })}</span>
+                <img
+                  class="media__img"
+                  src={imgPath(image.thumb)}
+                  srcset={`${imgPath(image.thumb)} ${image.tw}w, ${imgPath(image.src)} ${image.w}w`}
+                  sizes={full ? sizesFull : sizesHalf}
+                  width={image.w}
+                  height={image.h}
+                  alt={image.alt[lang]}
+                  loading={i < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {hasEmbeds && hasImages && <WorkVideos project={p} />}
+      {showPoster && (
+        <div class="media__poster">
+          <img
+            class="media__img"
+            src={imgPath(p.media.cover.src)}
+            width={p.media.cover.w}
+            height={p.media.cover.h}
+            alt=""
+            decoding="async"
+          />
+          <span class="media__play" aria-hidden="true" />
+        </div>
+      )}
+    </div>
+  )
+}

@@ -1,54 +1,110 @@
 ---
-// Stage 2 placeholder: the full work page, media and lightbox come in Stage 4.
+import '../../styles/work.css';
 import Base from '../../layouts/Base.astro';
-import { ui, type Lang } from '../../i18n/ui';
+import Description from '../work/Description.astro';
+import Lightbox from '../work/Lightbox.astro';
+import WorkMedia from '../work/WorkMedia.astro';
+import { studyLabel, ui, type Lang } from '../../i18n/ui';
 import { localePath, workPath } from '../../lib/paths';
-import { getProjects, neighbours, workTitle, type Project } from '../../lib/projects';
+import { getMediums, getProjects, mediumLabels, neighbours, workTitle, type Project } from '../../lib/projects';
 
 interface Props {
   lang: Lang;
   project: Project;
 }
-const { lang, project } = Astro.props;
+const { lang, project: p } = Astro.props;
 const t = ui[lang];
-const { prev, next } = neighbours(await getProjects(), project.id);
+const [ordered, mediums] = await Promise.all([getProjects(), getMediums()]);
+const { prev, next } = neighbours(ordered, p.id);
+
+const people = [...p.collaborators, ...p.credits].map((c) => (c.role ? `${c.name} (${c.role[lang]})` : c.name));
+const links = [
+  ...p.links.map((l) => ({ label: l.label[lang], url: l.url })),
+  ...p.socials.map((s) => ({ label: s.label, url: s.url })),
+];
+const showOriginalTitle = p.title.cs !== p.title.en && lang === 'en';
 ---
 
-<Base lang={lang} title={workTitle(project)} path={workPath(project.id)}>
-  <nav class="work-nav" aria-label={t.projects}>
-    <a href={localePath(lang, '/#works')}>{t.back}</a>
-    <span class="work-nav__pager">
-      {
-        prev && (
-          <a href={localePath(lang, workPath(prev.id))} rel="prev">
-            {t.previous}
-          </a>
-        )
-      }
-      {
-        next && (
-          <a href={localePath(lang, workPath(next.id))} rel="next">
-            {t.next}
-          </a>
-        )
-      }
-    </span>
-  </nav>
-  <article>
-    <p>{project.id}</p>
-    <h1>{project.title[lang]}</h1>
-    <p>{project.authors.join(', ')} · {project.year}</p>
-  </article>
-</Base>
+<Base lang={lang} title={workTitle(p)} path={workPath(p.id)}>
+  <article class="work">
+    <nav class="work-nav" aria-label={t.projects}>
+      <a class="work-nav__link" href={localePath(lang, '/#works')}
+        ><span aria-hidden="true">←&nbsp;</span>{t.backLabel}</a
+      >
+      <span class="work-nav__pager">
+        {
+          prev && (
+            <a class="work-nav__link" href={localePath(lang, workPath(prev.id))} rel="prev">
+              <span aria-hidden="true">←&nbsp;</span>
+              {t.previousLabel}
+            </a>
+          )
+        }
+        {
+          next && (
+            <a class="work-nav__link" href={localePath(lang, workPath(next.id))} rel="next">
+              {t.nextLabel}
+              <span aria-hidden="true">&nbsp;→</span>
+            </a>
+          )
+        }
+      </span>
+    </nav>
 
-<style>
-  .work-nav {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .work-nav__pager {
-    display: flex;
-    gap: 1rem;
-  }
-</style>
+    <div class="work__layout">
+      <div class="work__info">
+        <p class="work__number">{p.id}</p>
+        <h1 class="work__title">{p.title[lang]}</h1>
+        {showOriginalTitle && <p class="work__original-title">{p.title.cs}</p>}
+
+        <dl class="work__meta">
+          <dt>{p.authors.length > 1 ? t.authorMany : t.authorOne}</dt>
+          <dd>{p.authors.join(', ')}</dd>
+          {
+            people.length > 0 && (
+              <>
+                <dt>{t.collaboration}</dt>
+                <dd>{people.join(', ')}</dd>
+              </>
+            )
+          }
+          <dt>{t.year}</dt>
+          <dd>{p.year}</dd>
+          <dt>{t.studyYear}</dt>
+          <dd>{studyLabel(lang, p.study)}</dd>
+          <dt>{t.medium}</dt>
+          <dd>{mediumLabels(p, mediums, lang).join(', ')}</dd>
+          <dt>{t.format}</dt>
+          <dd>{p.format[lang]}</dd>
+          {
+            p.duration && (
+              <>
+                <dt>{t.duration}</dt>
+                <dd>{p.duration}</dd>
+              </>
+            )
+          }
+        </dl>
+
+        <Description lang={lang} project={p} />
+
+        {
+          links.length > 0 && (
+            <ul class="work__links">
+              {links.map((l) => (
+                <li>
+                  <a class="work__link" href={l.url} target="_blank" rel="noopener">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+      </div>
+
+      <WorkMedia lang={lang} project={p} />
+    </div>
+  </article>
+  {p.media.images.length > 0 && <Lightbox lang={lang} count={p.media.images.length} />}
+</Base>

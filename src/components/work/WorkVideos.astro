@@ -1,0 +1,22 @@
+---
+import type { Project } from '../../lib/projects';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+---
+
+{
+  p.media.videoEmbed.map((id) => (
+    <div class="media__video">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${id}`}
+        title={`YouTube: ${p.title.cs}`}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen></iframe>
+    </div>
+  ))
+}
