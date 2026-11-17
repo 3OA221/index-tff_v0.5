@@ -18,6 +18,7 @@
   --side-width: clamp(250px, 25vw, 430px);
   --side-gap: clamp(24px, 4vw, 72px);
   --strip-height: 34px;
+  --line: 1px solid var(--ink);
 
   color-scheme: light;
 }
@@ -41,6 +42,16 @@ body {
   font-family: var(--font-sans);
   font-weight: 400;
   line-height: 1.5;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
 }
 
 img {

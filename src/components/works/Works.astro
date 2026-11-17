@@ -1,0 +1,90 @@
+---
+import '../../styles/works.css';
+import Combobox, { type Option } from './Combobox.astro';
+import Tile from './Tile.astro';
+import { ui, studyLabel, VIEW_STORAGE_KEY, type Lang } from '../../i18n/ui';
+import { MAX_QUERY_LENGTH } from '../../lib/search';
+import type { Medium, Project } from '../../lib/projects';
+
+interface Props {
+  lang: Lang;
+  projects: Project[];
+  mediums: Medium[];
+}
+const { lang, projects, mediums } = Astro.props;
+const t = ui[lang];
+
+const csCollator = new Intl.Collator('cs');
+const langCollator = new Intl.Collator(lang);
+
+const nameOptions: Option[] = [...new Set(projects.flatMap((p) => p.authors))]
+  .sort(csCollator.compare)
+  .map((n) => ({ value: n, label: n }));
+const usedMediums = new Set(projects.flatMap((p) => p.mediums));
+const mediumOptions: Option[] = mediums
+  .filter((m) => usedMediums.has(m.id))
+  .map((m) => ({ value: m.id, label: m[lang] }))
+  .sort((a, b) => langCollator.compare(a.label, b.label));
+const yearOptions: Option[] = [...new Set(projects.map((p) => p.year))]
+  .sort((a, b) => a - b)
+  .map((y) => ({ value: String(y), label: String(y) }));
+const studyOptions: Option[] = [...new Set(projects.map((p) => p.study))]
+  .sort((a, b) => a - b)
+  .map((s) => ({ value: String(s), label: studyLabel(lang, s) }));
+---
+
+<section id="works" class="works" aria-labelledby="works-heading">
+  <h2 id="works-heading" class="visually-hidden">{t.projects}</h2>
+  <script is:inline define:vars={{ key: VIEW_STORAGE_KEY }}>
+    try {
+      if (localStorage.getItem(key) === 'list') document.documentElement.dataset.view = 'list';
+    } catch (e) {}
+  </script>
+
+  <div class="filters" role="search" aria-label={t.filter} data-filters>
+    <div class="field search" data-search-field>
+      <label class="visually-hidden" for="works-search">{t.searchLabel}</label>
+      <button type="button" class="field__clear" aria-label={t.clearSearch} data-clear hidden></button>
+      <input
+        id="works-search"
+        class="field__control search__input"
+        type="search"
+        placeholder={t.search}
+        maxlength={MAX_QUERY_LENGTH}
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+    <Combobox lang={lang} name="name" label={t.filterName} options={nameOptions} />
+    <Combobox lang={lang} name="medium" label={t.filterMedium} options={mediumOptions} />
+    <Combobox lang={lang} name="year" label={t.filterYear} options={yearOptions} />
+    <Combobox lang={lang} name="study" label={t.filterStudy} options={studyOptions} />
+    <div class="view-toggle" role="group" aria-label={t.view}>
+      <button type="button" class="view-toggle__btn" data-view="grid" aria-pressed="true">
+        <span class="visually-hidden">{t.viewGrid}</span>
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+          <rect x="1.5" y="1.5" width="5" height="5" fill="none" stroke="currentColor"></rect>
+          <rect x="9.5" y="1.5" width="5" height="5" fill="none" stroke="currentColor"></rect>
+          <rect x="1.5" y="9.5" width="5" height="5" fill="none" stroke="currentColor"></rect>
+          <rect x="9.5" y="9.5" width="5" height="5" fill="none" stroke="currentColor"></rect>
+        </svg>
+      </button>
+      <button type="button" class="view-toggle__btn" data-view="list" aria-pressed="false">
+        <span class="visually-hidden">{t.viewList}</span>
+        <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+          <path d="M1 3.5h14M1 8.5h14M1 13.5h14" fill="none" stroke="currentColor"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <p class="visually-hidden" role="status" data-status data-template={t.count} data-total={projects.length}></p>
+  <ul class="works__grid" data-grid>
+    {projects.map((p) => <Tile lang={lang} project={p} mediums={mediums} />)}
+  </ul>
+  <p class="works__empty" data-empty hidden>{t.nothingFound}</p>
+</section>
+
+<script>
+  import '../../scripts/works/index';
+</script>

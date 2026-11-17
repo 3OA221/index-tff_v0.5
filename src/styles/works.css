@@ -1,0 +1,299 @@
+/* Works section: filters, grid and list (spec 6.2, 7). Global, not scoped:
+   classes are toggled by src/scripts/works/. */
+
+.works {
+  margin-top: var(--section-gap);
+  border-top: var(--line);
+  padding-top: clamp(20px, 2vw, 28px);
+}
+
+/* ---------- Filter row ---------- */
+
+.filters {
+  display: none; /* needs JavaScript; the project list works without it */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem clamp(8px, 1vw, 14px);
+  margin-bottom: clamp(20px, 2vw, 28px);
+  align-items: end;
+}
+.js .filters {
+  display: grid;
+}
+@media (min-width: 700px) {
+  .filters {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  }
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-width: 0;
+  border-bottom: var(--line);
+}
+.field.is-active {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+.field__control {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  padding: 0.65rem 0.75rem 0.55rem;
+  text-align: left;
+}
+.field.is-active .field__control {
+  padding-left: 0.25rem;
+}
+
+/* Clear button at the start of an active field: an x of two 1px lines. */
+.field__clear {
+  position: relative;
+  flex: 0 0 auto;
+  width: 2rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.field__clear::before,
+.field__clear::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 1px;
+  background: currentColor;
+}
+.field__clear::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.field__clear::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.field.is-active :focus-visible {
+  outline-color: var(--ink);
+}
+
+/* Search */
+.search__input::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+.search__input::-webkit-search-cancel-button,
+.search__input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search__input:focus-visible {
+  outline-offset: -2px;
+}
+
+/* Combobox */
+.combo__button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+.combo__value {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.combo__chevron {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+.combo__button[aria-expanded='true'] .combo__chevron {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+.combo__list {
+  position: absolute;
+  z-index: 30;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin: 1px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: min(20rem, 60vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  color: var(--ink);
+  border: var(--line);
+  border-top: 0;
+}
+.combo__option {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+.combo__option[aria-selected='true'] {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+.combo__option.is-current {
+  background: var(--ink);
+  color: var(--surface);
+}
+
+/* View toggle */
+.view-toggle {
+  display: flex;
+  justify-self: end;
+  border: var(--line);
+}
+.view-toggle__btn {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+.view-toggle__btn + .view-toggle__btn {
+  border-left: var(--line);
+}
+.view-toggle__btn[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--surface);
+}
+.view-toggle__btn svg {
+  display: block;
+  shape-rendering: crispEdges;
+}
+
+/* ---------- Grid ---------- */
+
+.works__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(16px, 1.9vw, 30px) clamp(8px, 1vw, 14px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .works__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1360px) {
+  .works__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.tile__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.tile__media {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--placeholder);
+}
+.tile__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.tile__title {
+  display: block;
+  margin-top: 0.7rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+.tile__link:hover .tile__title,
+.tile__link:focus .tile__title {
+  text-decoration-line: underline;
+}
+.tile__meta {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: var(--muted);
+}
+.tile__mediums,
+.tile__sep--mediums {
+  display: none;
+}
+
+.works__empty {
+  margin: 0;
+  padding: 0.8rem 0;
+  font-size: 1rem;
+}
+
+/* ---------- List view ---------- */
+
+html[data-view='list'] .works__grid {
+  display: block;
+}
+/* A line between rows: on every row except the first shown one. */
+html[data-view='list'] .tile:not(:first-child):not(.is-first) {
+  border-top: var(--line);
+}
+html[data-view='list'] .tile__media {
+  display: none;
+}
+html[data-view='list'] .tile__link {
+  padding: 0.8rem 0;
+}
+html[data-view='list'] .tile__title {
+  margin-top: 0;
+}
+html[data-view='list'] .tile__mediums,
+html[data-view='list'] .tile__sep--mediums {
+  display: inline;
+}
+@media (min-width: 760px) {
+  html[data-view='list'] .tile__link {
+    display: grid;
+    grid-template-columns: 1.6fr 1.2fr 1.2fr 3.5rem;
+    column-gap: 1rem;
+    align-items: baseline;
+  }
+  html[data-view='list'] .tile__meta {
+    display: contents;
+  }
+  html[data-view='list'] .tile__sep,
+  html[data-view='list'] .tile__sep--mediums {
+    display: none;
+  }
+  html[data-view='list'] .tile__year {
+    text-align: right;
+  }
+}

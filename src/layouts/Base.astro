@@ -41,6 +41,9 @@ const enHome = localePath('en', '/');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
     {
       redirectSavedLang && (
         <script is:inline define:vars={{ key: LANG_STORAGE_KEY, target: enHome }}>

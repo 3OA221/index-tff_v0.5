@@ -1,31 +1,38 @@
 ---
-// Stage 2 placeholder: the about text, filters and grid come in Stage 3.
 import Base from '../../layouts/Base.astro';
+import Works from '../works/Works.astro';
 import { ui, type Lang } from '../../i18n/ui';
-import { localePath, workPath } from '../../lib/paths';
-import { getProjects } from '../../lib/projects';
+import { getMediums, getProjects } from '../../lib/projects';
+import { SITE_TITLE } from '../../config/site';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 const t = ui[lang];
-const projects = await getProjects();
+const [projects, mediums] = await Promise.all([getProjects(), getMediums()]);
 ---
 
 <Base lang={lang} path="/" redirectSavedLang={lang === 'cs'}>
-  <section id="about" aria-label="TEXT FORMA FUNKCE"></section>
-  <section id="works" aria-labelledby="works-heading">
-    <h2 id="works-heading">{t.projects}</h2>
-    <ul>
-      {
-        projects.map((p) => (
-          <li>
-            <a href={localePath(lang, workPath(p.id))}>{p.title.cs}</a> ({p.authors.join(', ')} ·{' '}
-            {p.year})
-          </li>
-        ))
-      }
-    </ul>
+  <h1 class="visually-hidden">{SITE_TITLE}</h1>
+  <section id="about" class="about" aria-label={SITE_TITLE}>
+    {t.about.map((para) => <p>{para}</p>)}
   </section>
+  <Works lang={lang} projects={projects} mediums={mediums} />
 </Base>
+
+<style>
+  .about {
+    max-width: 30em;
+    font-family: var(--font-text);
+    font-size: clamp(1.4rem, 2.5vw, 2.15rem);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .about p {
+    margin: 0;
+  }
+  .about p + p {
+    margin-top: 1.1em;
+  }
+</style>

@@ -15,6 +15,7 @@ Rules and context for every session working on this repository. Sections 2, 3, 4
 - `npm run build` = `scripts/validate-data.ts` (ids, count 19, mediums, image files) + `astro build` + `scripts/check-links.ts` (internal links, fragments, 38 project pages). Any failure fails the build and CI.
 - Routing: Czech pages in `src/pages/`, English in `src/pages/en/`; both render shared components in `src/components/pages/`. Links use `localePath(lang, path)` / `withBase()` from `src/lib/paths.ts`; never write the base path or `/en` by hand.
 - UI strings in `src/i18n/ui.ts`. The language switch stores `tff-lang`; only the Czech root page redirects to `/en/` when it is `en`.
+- Works section (Stage 3): markup in `src/components/works/`, styles in `src/styles/works.css` (global, because classes are toggled by script), behaviour in `src/scripts/works/` (`index.ts` filters and URL state, `combobox.ts`, `view.ts`, `preview.ts`). Search normalisation is shared: `src/lib/search.ts`. The `js` class on `<html>` is set inline in `Base.astro`.
 - Node runs the `.ts` scripts directly (type stripping): use only erasable TypeScript syntax there.
 
 ## 2. Rules from the user
@@ -148,7 +149,7 @@ Checks: clean `npm ci`, `npm run check`, `npm run build` pass; the CI run on the
 **Stage 2: data and routing.** Done. Put the data in a typed content collection (one JSON file per project plus the facets and the strip items), validated by a schema; write the data from section 9 with a script, not by hand. Czech and English page trees (section 5.2), `/work/NN/` pages for all 19 projects in both languages (placeholder content is fine), `hreflang`, the language switch, a not-found page, one base-path helper used by every link.
 Checks: a script that fails the build if an id is duplicated, a referenced image file is missing under `public/img/`, a medium id is not in the facets, or the number of projects is not 19; all 38 project pages exist; no broken internal links (run a link check on `dist/` and show it).
 
-**Stage 3: landing page and filters (the reference feature).** About, works section, search, four comboboxes, URL state, grid and list, tile hover preview, live status, empty state (section 6.2).
+**Stage 3: landing page and filters (the reference feature).** Done; report in `docs/stage-3-report.md`. About, works section, search, four comboboxes, URL state, grid and list, tile hover preview, live status, empty state (section 6.2).
 Checks: go through every item of 6.2 in a browser at 390px and desktop, in both languages; keyboard-only run; reduced motion; show screenshots. After this stage the skeleton is complete: write a short report (what works and how it was checked, what was not checked, and which later stages a smaller model can do safely with a checklist and which need a strong model).
 
 **Stage 4: work page, lightbox, video.** Sections 6.3 and 6.4.

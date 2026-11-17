@@ -1,0 +1,55 @@
+---
+/**
+ * Select-only combobox (WAI-ARIA APG pattern). Server-rendered markup;
+ * behaviour in src/scripts/works/combobox.ts. The field name is the button
+ * text while nothing is chosen and is not an option.
+ */
+import { fmt, ui, type Lang } from '../../i18n/ui';
+
+export interface Option {
+  value: string;
+  label: string;
+}
+interface Props {
+  lang: Lang;
+  /** URL parameter name: name, medium, year, study. */
+  name: string;
+  label: string;
+  options: Option[];
+}
+const { lang, name, label, options } = Astro.props;
+const id = `combo-${name}`;
+---
+
+<div class="field combo" data-combo={name}>
+  <span class="visually-hidden" id={`${id}-label`}>{label}</span>
+  <button
+    type="button"
+    class="field__clear"
+    aria-label={fmt(ui[lang].clearFilter, { label })}
+    data-clear
+    hidden></button>
+  <button
+    type="button"
+    role="combobox"
+    id={id}
+    class="field__control combo__button"
+    aria-haspopup="listbox"
+    aria-expanded="false"
+    aria-controls={`${id}-list`}
+    aria-labelledby={`${id}-label`}
+    data-label={label}
+  >
+    <span class="combo__value" id={`${id}-value`}>{label}</span>
+    <span class="combo__chevron" aria-hidden="true"></span>
+  </button>
+  <ul role="listbox" id={`${id}-list`} class="combo__list" aria-labelledby={`${id}-label`} tabindex="-1" hidden>
+    {
+      options.map((o, i) => (
+        <li role="option" id={`${id}-opt-${i}`} class="combo__option" data-value={o.value} aria-selected="false">
+          {o.label}
+        </li>
+      ))
+    }
+  </ul>
+</div>
