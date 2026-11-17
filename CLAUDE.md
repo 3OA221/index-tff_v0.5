@@ -5,15 +5,15 @@ Rules and context for every session working on this repository. Sections 2, 3, 4
 ## Project notes
 
 - Astro static site, TypeScript strict, UnoCSS (`presetWind4`). No UI framework.
-- Working branch in practice: `claude/repository-code-replacement-tbiwab` (the cloud session's assigned branch, used instead of `astro-rebuild`). CI runs on pushes to both and on pull requests.
-- `base` and `site` live only in `astro.config.mjs`. Every internal link and asset path goes through `withBase()` in `src/lib/paths.ts`.
+- Repository `3OA221/index-tff_v0.5`. Work directly on `main` (user decision, 17 Nov 2026). The old site stays in `3OA221/index-tff` and is not touched. CI runs on pushes to `main` and on pull requests.
+- `SITE` and `BASE` live only in `astro.config.mjs` (exported; `scripts/check-links.ts` imports them). Site URL: `https://3oa221.github.io/index-tff_v0.5/`. Every internal link and asset path goes through `withBase()` in `src/lib/paths.ts`.
 - Version label: `SITE_VERSION` in `src/config/site.ts`. Build identifier: `BUILD_ID` in `src/lib/build.ts` (UTC `YYYYMMDD.HHMM.<short commit>`).
 - UnoCSS's Astro integration injects `uno.css` itself; do not import `virtual:uno.css` in layouts.
 - `vp check` settings (format and lint ignores) are in `vite.config.ts`; Astro does not read that file. `README.md` is excluded from formatting because the user maintains it.
 - `@types/node` is a dev dependency so `astro check` accepts the Node imports in `src/lib/build.ts`.
 - Data: `src/content/projects/NN.json`, `src/content/facets.json`, `src/content/strip.json`, written by `node scripts/import-spec-data.ts <spec.md>` (never by hand; excluded from formatting). Schemas in `src/content.config.ts`. Access through `src/lib/projects.ts` (`getProjects()` returns site order).
 - `npm run build` = `scripts/validate-data.ts` (ids, count 19, mediums, image files) + `astro build` + `scripts/check-links.ts` (internal links, fragments, 38 project pages). Any failure fails the build and CI.
-- Routing: Czech pages in `src/pages/`, English in `src/pages/en/`; both render shared components in `src/components/pages/`. Links use `localePath(lang, path)` / `withBase()` from `src/lib/paths.ts`; never write `/index-tff` or `/en` by hand.
+- Routing: Czech pages in `src/pages/`, English in `src/pages/en/`; both render shared components in `src/components/pages/`. Links use `localePath(lang, path)` / `withBase()` from `src/lib/paths.ts`; never write the base path or `/en` by hand.
 - UI strings in `src/i18n/ui.ts`. The language switch stores `tff-lang`; only the Czech root page redirects to `/en/` when it is `en`.
 - Node runs the `.ts` scripts directly (type stripping): use only erasable TypeScript syntax there.
 
@@ -40,7 +40,7 @@ Use exactly these, with npm and a committed `package-lock.json`:
 | @fontsource/inter, /newsreader, /space-grotesk, /ibm-plex-mono | 5.3.0 each | Czech needs the `latin-ext` files too                                             |
 | vite-plus (dev)                                                | 1.7.0      | Optional helper, see below                                                        |
 
-Verified working: Astro 7.4.12 with UnoCSS (`presetWind4` imported from `unocss`), TypeScript strict, `astro check` and `astro build` with a `base` path. The generated site linked its CSS as `/index-tff/_astro/...`.
+Verified working: Astro 7.4.12 with UnoCSS (`presetWind4` imported from `unocss`), TypeScript strict, `astro check` and `astro build` with a `base` path. The generated site linked its CSS as `<base>/_astro/...`.
 
 Tested config files:
 
@@ -51,7 +51,7 @@ import { defineConfig } from 'astro/config';
 import UnoCSS from 'unocss/astro';
 export default defineConfig({
   site: 'https://3oa221.github.io',
-  base: '/index-tff',
+  base: '/index-tff_v0.5',
   integrations: [UnoCSS()],
   // add i18n here (section 5.8)
 });
@@ -85,12 +85,12 @@ No UI framework (no React, Vue, Solid) on the public site. Behaviour is written 
 
 ## 4. GitHub and hosting
 
-- Repository: `3OA221/index-tff`, public, you have push access. Use the `add_repo` tool with owner `3OA221`, repo `index-tff`, access `push`, run the clone command it returns, then `register_repo_root`.
-- The repository root currently holds the old site on `main`: `index.html`, `work.html`, `css/`, `js/`, `fonts/`, `README.md`, `img/`, favicon files. Leave `main` untouched until Stage 7.
-- Work on a new branch `astro-rebuild`. In Stage 1, on that branch only, remove the old `index.html`, `work.html`, `css/`, `js/` and `fonts/` (never open them first), keep `README.md`, and move `img/` to `public/img/` and the four favicon files to `public/` (same file names: `favicon.ico`, `favicon.svg`, `favicon-64.png`, `apple-touch-icon.png`) with `git mv`.
+- Repository: `3OA221/index-tff_v0.5`, you have push access. In a cloud session, use the `add_repo` tool with owner `3OA221`, repo `index-tff_v0.5`, access `push`, run the clone command it returns, then `register_repo_root`.
+- History: Stages 1 and 2 were built in `3OA221/index-tff` (branch `claude/repository-code-replacement-tbiwab`) and merged into this repository. The old plain-HTML site there (`main`) is not touched.
+- Work on `main`. Stage 1 removed the old site files and moved `img/` to `public/img/` and the four favicon files to `public/` (`favicon.ico`, `favicon.svg`, `favicon-64.png`, `apple-touch-icon.png`).
 - Images: `public/img/NN/<file>` where the file names are exactly the `src`, `thumb`, `cover` and `preview` values in section 9 (relative to `img/`). They are already WebP and sized; use the `w`, `h`, `tw` values from the data. No image processing is needed.
-- Hosting: GitHub Pages from this repository. Expected URL `https://3oa221.github.io/index-tff/`, so `site` and `base` are as in section 3, and every internal link and asset path must respect `base`. A custom domain may come later: keep `base` in one place.
-- CI for the branch: a workflow `.github/workflows/ci.yml` that runs on pushes to `astro-rebuild` and on pull requests, with only the build job below (no deploy job), using `build-cmd: npm run check && npm run build` for the Astro action.
+- Hosting: GitHub Pages from this repository. Expected URL `https://3oa221.github.io/index-tff_v0.5/`, so `site` and `base` are as in `astro.config.mjs`, and every internal link and asset path must respect `base`. A custom domain may come later: keep `base` in one place.
+- CI: `.github/workflows/ci.yml` runs on pushes to `main` and on pull requests, with only the build job (no deploy job), using `build-cmd: npm run check && npm run build` for the Astro action.
 - The deploy workflow (Stage 7) is the one from the Astro documentation:
 
 ```yaml
@@ -123,14 +123,14 @@ jobs:
         uses: actions/deploy-pages@v5
 ```
 
-The action detects the package manager from the lockfile. The user must set Settings, Pages, Source to "GitHub Actions" themselves at Stage 7; you cannot do it. Do not add the deploy workflow before Stage 7, because it would replace the live site.
+The action detects the package manager from the lockfile. The user must set Settings, Pages, Source to "GitHub Actions" themselves at Stage 7; you cannot do it. Do not add the deploy workflow before Stage 7.
 
-- Commit protocol: one commit per stage (more if a stage is large), message `Stage N: title` plus a body with the change notes. Push to `astro-rebuild` after each stage's checks pass. Never force-push, never commit to `main` before Stage 7, never commit secrets or files outside the repository. Write a `CLAUDE.md` in Stage 1 holding sections 2, 3, 4 and the stage list, so later sessions (including smaller models) start with the rules.
+- Commit protocol: one commit per stage (more if a stage is large), message `Stage N: title` plus a body with the change notes. Push to `main` after each stage's checks pass. Never force-push, never commit secrets or files outside the repository.
 - Show the user what you built: if a headless browser is available, send screenshots (desktop and 390px wide, Czech and English) at the end of each visual stage and say plainly what you did and did not check.
 
 ## 5. Decisions already made (do not ask again)
 
-1. Hosting: GitHub Pages, project site with base `/index-tff`.
+1. Hosting: GitHub Pages, project site with base `/index-tff_v0.5`.
 2. Languages: Czech is the default at the site root (`/`, `/work/NN/`); English under `/en/` (`/en/`, `/en/work/NN/`). Use Astro's i18n routing with `prefixDefaultLocale: false`. Every page has `hreflang` alternates and the CZ/EN switch links to the same page in the other language. The saved language choice (localStorage `tff-lang`) is used on the root page: if it is `en`, go to `/en/`. No other automatic redirect.
 3. Project URLs: `/work/NN/` with NN the two-digit project id.
 4. Handles: show exactly what is in the data; nothing more is withheld or added.
@@ -140,12 +140,12 @@ The action detects the package manager from the lockfile. The user must set Sett
 
 ## 10. Stages
 
-At the end of each stage: run the checks, show the output, commit and push to `astro-rebuild`, write change notes (Added / Changed / Removed / Fixed), stop.
+At the end of each stage: run the checks, show the output, commit and push to `main`, write change notes (Added / Changed / Removed / Fixed), stop.
 
-**Stage 1: scaffold.** Branch `astro-rebuild`; clear the old site files and move the assets (section 4); Astro project with the tested config (section 3), TypeScript strict, UnoCSS with the colour and font tokens (section 7) as theme, fonts, favicons, the base layout (document language, titles, skip link, empty side and content regions), `package.json` scripts (`dev`, `build`, `check`, `lint` via `vp check`), `CLAUDE.md`, the CI workflow.
+**Stage 1: scaffold.** Done. Cleared the old site files and move the assets (section 4); Astro project with the tested config (section 3), TypeScript strict, UnoCSS with the colour and font tokens (section 7) as theme, fonts, favicons, the base layout (document language, titles, skip link, empty side and content regions), `package.json` scripts (`dev`, `build`, `check`, `lint` via `vp check`), `CLAUDE.md`, the CI workflow.
 Checks: clean `npm ci`, `npm run check`, `npm run build` pass; the CI run on the branch is green (read it with the GitHub tools).
 
-**Stage 2: data and routing.** Put the data in a typed content collection (one JSON file per project plus the facets and the strip items), validated by a schema; write the data from section 9 with a script, not by hand. Czech and English page trees (section 5.2), `/work/NN/` pages for all 19 projects in both languages (placeholder content is fine), `hreflang`, the language switch, a not-found page, one base-path helper used by every link.
+**Stage 2: data and routing.** Done. Put the data in a typed content collection (one JSON file per project plus the facets and the strip items), validated by a schema; write the data from section 9 with a script, not by hand. Czech and English page trees (section 5.2), `/work/NN/` pages for all 19 projects in both languages (placeholder content is fine), `hreflang`, the language switch, a not-found page, one base-path helper used by every link.
 Checks: a script that fails the build if an id is duplicated, a referenced image file is missing under `public/img/`, a medium id is not in the facets, or the number of projects is not 19; all 38 project pages exist; no broken internal links (run a link check on `dist/` and show it).
 
 **Stage 3: landing page and filters (the reference feature).** About, works section, search, four comboboxes, URL state, grid and list, tile hover preview, live status, empty state (section 6.2).
@@ -159,7 +159,7 @@ Checks: thresholds of the zoom state at the stated viewport fractions; reduced m
 
 **Stage 6: quality.** Accessibility pass (6.6) with an automated checker if one is available, performance check, no console errors, link check, `vp check` clean.
 
-**Stage 7: go live.** Merge `astro-rebuild` into `main` only after the user says so. Add the deploy workflow (section 4). Tell the user to set Settings, Pages, Source to "GitHub Actions". After the first run, confirm the site loads at `https://3oa221.github.io/index-tff/` with the right base path.
+**Stage 7: go live.** Only after the user says so: add the deploy workflow (section 4) on `main`. Tell the user to set Settings, Pages, Source to "GitHub Actions" in `3OA221/index-tff_v0.5`. After the first run, confirm the site loads at `https://3oa221.github.io/index-tff_v0.5/` with the right base path.
 
 **Stage 8: new features.** From the user's list (section 11).
 

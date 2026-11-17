@@ -5,7 +5,7 @@ import type { Lang } from '../i18n/ui';
  * these functions, so `base` in astro.config.mjs is the only place to change it.
  */
 
-/** Prefix a site-relative path with the base: withBase('img/01/a.webp') -> '/index-tff/img/01/a.webp'. */
+/** Prefix a site-relative path with the base: withBase('img/01/a.webp') -> '<base>/img/01/a.webp'. */
 export function withBase(path: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
   const rest = path.replace(/^\/+/, '');
@@ -15,8 +15,8 @@ export function withBase(path: string): string {
 /**
  * Locale-aware page path. `path` is the language-neutral page path ('/', '/work/01/').
  * Czech is the default at the root, English under /en/.
- *   localePath('cs', '/work/01/') -> '/index-tff/work/01/'
- *   localePath('en', '/')         -> '/index-tff/en/'
+ *   localePath('cs', '/work/01/') -> '<base>/work/01/'
+ *   localePath('en', '/')         -> '<base>/en/'
  */
 export function localePath(lang: Lang, path = '/'): string {
   const [pathname = '/', hash] = path.split('#');

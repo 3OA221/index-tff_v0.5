@@ -1,16 +1,16 @@
 /**
  * Link check on the built site (dist/). Runs after `astro build`.
  * Checks every internal href, src and srcset in every HTML page:
- * - it starts with the base path (/index-tff/) or the site URL with the base
+ * - it starts with the base path or the site URL with the base (both from astro.config.mjs)
  * - the target file exists in dist/ (a path ending in / means its index.html)
  * - a #fragment exists as an id in the target page
  * Also checks that every project has a Czech and an English page.
  */
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { BASE as BASE_PATH, SITE } from '../astro.config.mjs';
 
-const SITE = 'https://3oa221.github.io';
-const BASE = '/index-tff/';
+const BASE = `${BASE_PATH.replace(/\/+$/, '')}/`;
 
 const root = process.cwd();
 const dist = join(root, 'dist');
