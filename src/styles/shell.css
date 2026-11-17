@@ -176,7 +176,7 @@
 }
 .face:focus-visible {
   outline: 2px solid currentColor;
-  outline-offset: -2px;
+  outline-offset: 3px;
 }
 /* Without JavaScript: unstretched and centred. */
 .face__plain {

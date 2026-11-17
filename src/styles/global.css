@@ -107,8 +107,10 @@ a {
   color: inherit;
 }
 
+/* Focus ring: 2px, 3px outside the element. Ink on the light page; light
+   variants are set for dark areas (footer, lightbox; the logo uses its own colour). */
 :focus-visible {
-  outline: 2px solid currentColor;
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
 
@@ -129,7 +131,6 @@ a {
 .skip-link:focus,
 .skip-link:focus-visible {
   transform: translateY(calc(var(--strip-height) + 8px));
-  outline-color: var(--surface);
 }
 
 .visually-hidden {

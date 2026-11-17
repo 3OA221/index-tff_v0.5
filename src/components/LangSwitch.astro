@@ -19,11 +19,10 @@ const { lang, path } = Astro.props;
           href={localePath(l, path)}
           hreflang={l}
           lang={l}
-          aria-label={ui[l].langName}
           aria-current={l === lang ? 'page' : undefined}
           data-lang-link={l}
         >
-          {ui[l].langShort}
+          {ui[l].langShort}<span class="visually-hidden"> {ui[l].langName}</span>
         </a>
       ))
     }

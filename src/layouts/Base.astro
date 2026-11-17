@@ -11,6 +11,10 @@ import '@fontsource/space-grotesk/latin-700.css';
 import '@fontsource/space-grotesk/latin-ext-700.css';
 import '@fontsource/ibm-plex-mono/latin-700.css';
 import '@fontsource/ibm-plex-mono/latin-ext-700.css';
+import interLatin400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
+import interLatinExt400 from '@fontsource/inter/files/inter-latin-ext-400-normal.woff2?url';
+import newsreaderLatin400 from '@fontsource/newsreader/files/newsreader-latin-400-normal.woff2?url';
+import newsreaderLatinExt400 from '@fontsource/newsreader/files/newsreader-latin-ext-400-normal.woff2?url';
 import '../styles/global.css';
 import '../styles/shell.css';
 
@@ -64,6 +68,12 @@ const enHome = localePath('en', '/');
             }
           } catch (e) {}
         </script>
+      )
+    }
+    {/* Fonts of the first screen, loaded before first paint so the text does not reflow (layout shift). */}
+    {
+      [interLatin400, interLatinExt400, ...(kind === 'landing' ? [newsreaderLatin400, newsreaderLatinExt400] : [])].map(
+        (href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />,
       )
     }
     <title>{title}</title>

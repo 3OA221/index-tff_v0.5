@@ -97,9 +97,6 @@
   -webkit-appearance: none;
   appearance: none;
 }
-.search__input:focus-visible {
-  outline-offset: -2px;
-}
 
 /* Combobox */
 .combo__button {
