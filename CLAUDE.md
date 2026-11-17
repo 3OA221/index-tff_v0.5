@@ -19,6 +19,7 @@ Rules and context for every session working on this repository. Sections 2, 3, 4
 - Work page (Stage 4): `src/components/pages/WorkPage.astro` with `src/components/work/` (media, videos, description, lightbox), styles in `src/styles/work.css`, lightbox behaviour in `src/scripts/lightbox.ts` (native `<dialog>`; page scroll lock is CSS `html:has(.lightbox[open])`). Image layout rules in `placeImages()` (`src/lib/media.ts`). The 404 page shows "Projekt nebyl nalezen." under `/work/`.
 - Shell (Stage 5): `src/components/shell/` (Strip, Logo, Footer), `LangSwitch.astro` (with its white copy), styles in `src/styles/shell.css`, behaviour in `src/scripts/shell/` (`strip.ts`, `logo.ts`, `zoom.ts`, `switch-copy.ts`). The zoom state is one registered CSS number `--z` on `<html>` (class `is-zoom`, 0.9 s transition); colours, side column, gap, logo scale and grain are derived from it in `src/styles/global.css`. `Base.astro` takes `kind` (`landing`, `work`, `other`). Scripts in `src/scripts/` end with `export {};` so TypeScript treats them as modules.
 - Focus ring: ink by default (`:focus-visible` in `global.css`), light only in dark areas (footer, lightbox, logo). Never use `currentColor` for it: inverted elements would get a light ring on the light page.
+- Live site: `https://3oa221.github.io/index-tff_v0.5/`. Every push to `main` deploys it (`.github/workflows/deploy.yml`); CI (`ci.yml`) also runs check and build on pushes and pull requests. Use a branch and a pull request for larger changes so the live site is not broken by an unfinished stage.
 - Node runs the `.ts` scripts directly (type stripping): use only erasable TypeScript syntax there.
 
 ## 2. Rules from the user
@@ -163,7 +164,7 @@ Checks: thresholds of the zoom state at the stated viewport fractions; reduced m
 
 **Stage 6: quality.** Done; report in `docs/stage-6-report.md`. Accessibility pass (6.6) with an automated checker if one is available, performance check, no console errors, link check, `vp check` clean.
 
-**Stage 7: go live.** Only after the user says so: add the deploy workflow (section 4) on `main`. Tell the user to set Settings, Pages, Source to "GitHub Actions" in `3OA221/index-tff_v0.5`. After the first run, confirm the site loads at `https://3oa221.github.io/index-tff_v0.5/` with the right base path.
+**Stage 7: go live.** Done: `.github/workflows/deploy.yml` deploys every push to `main`. Only after the user says so: add the deploy workflow (section 4) on `main`. Tell the user to set Settings, Pages, Source to "GitHub Actions" in `3OA221/index-tff_v0.5`. After the first run, confirm the site loads at `https://3oa221.github.io/index-tff_v0.5/` with the right base path.
 
 **Stage 8: new features.** From the user's list (section 11).
 
