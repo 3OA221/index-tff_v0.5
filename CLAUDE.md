@@ -17,6 +17,7 @@ Rules and context for every session working on this repository. Sections 2, 3, 4
 - UI strings in `src/i18n/ui.ts`. The language switch stores `tff-lang`; only the Czech root page redirects to `/en/` when it is `en`.
 - Works section (Stage 3): markup in `src/components/works/`, styles in `src/styles/works.css` (global, because classes are toggled by script), behaviour in `src/scripts/works/` (`index.ts` filters and URL state, `combobox.ts`, `view.ts`, `preview.ts`). Search normalisation is shared: `src/lib/search.ts`. The `js` class on `<html>` is set inline in `Base.astro`.
 - Work page (Stage 4): `src/components/pages/WorkPage.astro` with `src/components/work/` (media, videos, description, lightbox), styles in `src/styles/work.css`, lightbox behaviour in `src/scripts/lightbox.ts` (native `<dialog>`; page scroll lock is CSS `html:has(.lightbox[open])`). Image layout rules in `placeImages()` (`src/lib/media.ts`). The 404 page shows "Projekt nebyl nalezen." under `/work/`.
+- Shell (Stage 5): `src/components/shell/` (Strip, Logo, Footer), `LangSwitch.astro` (with its white copy), styles in `src/styles/shell.css`, behaviour in `src/scripts/shell/` (`strip.ts`, `logo.ts`, `zoom.ts`, `switch-copy.ts`). The zoom state is one registered CSS number `--z` on `<html>` (class `is-zoom`, 0.9 s transition); colours, side column, gap, logo scale and grain are derived from it in `src/styles/global.css`. `Base.astro` takes `kind` (`landing`, `work`, `other`). Scripts in `src/scripts/` end with `export {};` so TypeScript treats them as modules.
 - Node runs the `.ts` scripts directly (type stripping): use only erasable TypeScript syntax there.
 
 ## 2. Rules from the user
@@ -156,7 +157,7 @@ Checks: go through every item of 6.2 in a browser at 390px and desktop, in both 
 **Stage 4: work page, lightbox, video.** Done. Sections 6.3 and 6.4.
 Checks: every item, for projects with 1, 4, 5 and 17 images, a project with a video ID, a video-only project, a Slovak-text project; both languages; keyboard-only; screenshots.
 
-**Stage 5: shell and motion.** Announcement strip, side panel, logo and its effects, zoom state, language switch copy, footer, page-state rules for work pages (section 6.1).
+**Stage 5: shell and motion.** Done. Announcement strip, side panel, logo and its effects, zoom state, language switch copy, footer, page-state rules for work pages (section 6.1).
 Checks: thresholds of the zoom state at the stated viewport fractions; reduced motion; no flicker when scrolling slowly; screenshots at 390px and desktop.
 
 **Stage 6: quality.** Accessibility pass (6.6) with an automated checker if one is available, performance check, no console errors, link check, `vp check` clean.

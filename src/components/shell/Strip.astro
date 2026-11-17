@@ -1,0 +1,36 @@
+---
+/**
+ * Announcement strip (spec 6.1.1). The items are rendered once (readable
+ * without JavaScript and by assistive technology); src/scripts/shell/strip.ts
+ * builds the decorative repeats and the endless loop.
+ */
+import { ui, type Lang } from '../../i18n/ui';
+import type { StripItem } from '../../lib/projects';
+
+interface Props {
+  lang: Lang;
+  items: StripItem[];
+}
+const { lang, items } = Astro.props;
+---
+
+{
+  items.length > 0 && (
+    <div class="strip" role="region" aria-label={ui[lang].announcements} data-strip>
+      <div class="strip__track" data-strip-track>
+        <ul class="strip__set" data-strip-set>
+          {items.map((item) => (
+            <li class="strip__item">
+              <span class="strip__text">{item[lang]}</span>
+              <span class="strip__plus" aria-hidden="true" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  import '../../scripts/shell/strip';
+</script>

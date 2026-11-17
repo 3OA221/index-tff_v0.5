@@ -1,0 +1,332 @@
+/* Shell (spec 6.1, 7): strip, side panel, logo, language switch, footer. */
+
+/* ---------- Announcement strip ---------- */
+
+.strip {
+  position: fixed;
+  z-index: 60;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--strip-height);
+  overflow: hidden;
+  background: var(--strip);
+  color: var(--surface-rest);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.strip__track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+}
+.strip__set {
+  display: flex;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.strip__item {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.strip__text {
+  padding: 0 1.75rem;
+}
+/* Thin plus sign drawn with two 1px lines, 16px. */
+.strip__plus {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+.strip__plus::before,
+.strip__plus::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+}
+.strip__plus::before {
+  left: 0;
+  right: 0;
+  top: 7.5px;
+  height: 1px;
+}
+.strip__plus::after {
+  top: 0;
+  bottom: 0;
+  left: 7.5px;
+  width: 1px;
+}
+/* Without the loop (no JavaScript, reduced motion): the first item only. */
+.strip:not(.is-looping) .strip__item ~ .strip__item,
+.strip:not(.is-looping) .strip__set ~ .strip__set {
+  display: none;
+}
+.strip:not(.is-looping) .strip__plus {
+  display: none;
+}
+
+/* ---------- Side panel ---------- */
+
+.frame__side {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: var(--section-gap);
+}
+.side-switch {
+  position: relative;
+}
+@media (min-width: 900px) {
+  .frame__side {
+    display: block;
+    margin: 0;
+  }
+  /* Pinned below the strip for the whole page, over the footer too. */
+  .logo {
+    position: fixed;
+    z-index: 50;
+    top: calc(var(--strip-height) + var(--margin));
+    left: var(--margin);
+  }
+  .side-switch {
+    position: fixed;
+    z-index: 50;
+    left: var(--margin);
+    top: calc(var(--strip-height) + var(--margin) + var(--edge) * 1.7 * var(--logo-scale) + 1rem);
+  }
+}
+
+/* ---------- Logo ---------- */
+
+/* White with a difference blend: dark on the grey or white page, light over the footer. */
+.logo {
+  width: calc(var(--edge) * 1.55);
+  height: calc(var(--edge) * 1.7);
+  color: #fff;
+  mix-blend-mode: difference;
+  transform: scale(var(--logo-scale));
+  transform-origin: 0 0;
+}
+.logo__stage {
+  position: absolute;
+  inset: 0;
+  perspective: calc(var(--edge) * 6);
+}
+.logo__cube {
+  position: absolute;
+  left: calc(var(--edge) * 0.275);
+  top: calc(var(--edge) * 0.35);
+  width: var(--edge);
+  height: var(--edge);
+  transform-style: preserve-3d;
+  transform: rotateX(-35deg) rotateY(-45deg);
+  animation: logo-sway 16s ease-in-out infinite;
+}
+@keyframes logo-sway {
+  0%,
+  100% {
+    transform: rotateX(-35deg) rotateY(-45deg);
+  }
+  20% {
+    transform: rotateX(-26deg) rotateY(-30deg);
+  }
+  45% {
+    transform: rotateX(-42deg) rotateY(-39deg);
+  }
+  70% {
+    transform: rotateX(-31deg) rotateY(-60deg);
+  }
+  88% {
+    transform: rotateX(-39deg) rotateY(-52deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo__cube {
+    animation: none;
+  }
+}
+.face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  text-decoration: none;
+  overflow: visible;
+}
+.face--forma {
+  transform: translateZ(calc(var(--edge) / 2));
+}
+.face--funkce {
+  transform: rotateY(90deg) translateZ(calc(var(--edge) / 2));
+}
+.face--text {
+  transform: rotateX(90deg) translateZ(calc(var(--edge) / 2));
+}
+.face:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -2px;
+}
+/* Without JavaScript: unstretched and centred. */
+.face__plain {
+  font-size: calc(var(--edge) * 0.26);
+  line-height: 1;
+  white-space: nowrap;
+}
+.face--text .face__plain {
+  font-family: var(--font-text);
+  font-style: italic;
+  font-weight: 700;
+}
+.face--forma .face__plain {
+  font-family: var(--font-forma);
+  font-weight: 700;
+}
+.face--funkce .face__plain {
+  font-family: var(--font-funkce);
+  font-weight: 700;
+}
+.face.is-fitted .face__plain {
+  display: none;
+}
+.face__svg,
+.face__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.face__svg text {
+  text-rendering: geometricPrecision;
+}
+
+/* ---------- Language switch ---------- */
+
+.lang-switch {
+  display: flex;
+}
+.lang-switch__btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+}
+.lang-switch__btn + .lang-switch__btn {
+  border-left: 0;
+}
+.lang-switch__btn[aria-current='page'] {
+  background: var(--ink);
+  color: var(--surface);
+}
+/* White copy over the footer, clipped by src/scripts/shell/switch-copy.ts. */
+.lang-switch--copy {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  clip-path: inset(100% 0 0 0);
+}
+.lang-switch--copy .lang-switch__btn {
+  border-color: var(--surface-rest);
+  color: var(--surface-rest);
+  background: var(--ink);
+}
+.lang-switch--copy .lang-switch__btn.is-current {
+  background: var(--surface-rest);
+  color: var(--ink);
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+  position: relative;
+  background: var(--ink);
+  color: var(--surface-rest);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+.footer :focus-visible {
+  outline-color: var(--surface-rest);
+}
+.footer__inner {
+  padding: clamp(56px, 8vw, 120px) var(--margin);
+}
+@media (min-width: 900px) {
+  .footer__inner {
+    padding-left: calc(var(--margin) + var(--side-col) + var(--gap-col));
+  }
+}
+.footer__blocks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: clamp(24px, 3vw, 48px);
+}
+@media (min-width: 700px) {
+  .footer__blocks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1600px) {
+  .footer__blocks {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* Headings, texts and link lists line up across the blocks (subgrid rows). */
+.footer__block {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+.footer__heading {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted-on-ink);
+}
+.footer__text {
+  margin: 0 0 1rem;
+}
+.footer__links {
+  margin: 0;
+  padding: 0 0 clamp(32px, 4vw, 56px);
+  list-style: none;
+}
+.footer a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+.footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--muted);
+  font-size: 0.8125rem;
+}
+.footer__bottom p {
+  margin: 0;
+}

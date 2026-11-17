@@ -13,7 +13,7 @@ const t = ui[lang];
 const [projects, mediums] = await Promise.all([getProjects(), getMediums()]);
 ---
 
-<Base lang={lang} path="/" redirectSavedLang={lang === 'cs'}>
+<Base lang={lang} path="/" redirectSavedLang={lang === 'cs'} kind="landing">
   <h1 class="visually-hidden">{SITE_TITLE}</h1>
   <section id="about" class="about" aria-label={SITE_TITLE}>
     {t.about.map((para) => <p>{para}</p>)}

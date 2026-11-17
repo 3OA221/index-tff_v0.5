@@ -12,8 +12,13 @@ import '@fontsource/space-grotesk/latin-ext-700.css';
 import '@fontsource/ibm-plex-mono/latin-700.css';
 import '@fontsource/ibm-plex-mono/latin-ext-700.css';
 import '../styles/global.css';
+import '../styles/shell.css';
 
 import LangSwitch from '../components/LangSwitch.astro';
+import Footer from '../components/shell/Footer.astro';
+import Logo from '../components/shell/Logo.astro';
+import Strip from '../components/shell/Strip.astro';
+import { getStripItems } from '../lib/projects';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../config/site';
 import { LANG_STORAGE_KEY, LANGS, ui, type Lang } from '../i18n/ui';
 import { absoluteUrl, localePath, withBase } from '../lib/paths';
@@ -29,15 +34,21 @@ interface Props {
   path?: string;
   /** Czech root page only: go to /en/ if the visitor chose English before. */
   redirectSavedLang?: boolean;
+  /**
+   * Page kind for the shell state (spec 6.1.5, 6.1.6): the landing page zooms
+   * while the works are on screen; work pages start white with the small logo.
+   */
+  kind?: 'landing' | 'work' | 'other';
 }
 
-const { lang, title = SITE_TITLE, path, redirectSavedLang = false } = Astro.props;
+const { lang, title = SITE_TITLE, path, redirectSavedLang = false, kind = 'other' } = Astro.props;
+const stripItems = await getStripItems();
 const t = ui[lang];
 const enHome = localePath('en', '/');
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} class:list={[{ 'has-strip': stripItems.length > 0, 'is-zoom': kind === 'work' }]} data-page={kind}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -76,8 +87,10 @@ const enHome = localePath('en', '/');
   </head>
   <body>
     <a class="skip-link" href="#main">{t.skip}</a>
+    <Strip lang={lang} items={stripItems} />
     <div class="frame">
       <aside class="frame__side">
+        <Logo lang={lang} />
         {path && <LangSwitch lang={lang} path={path} />}
         <slot name="side" />
       </aside>
@@ -85,5 +98,9 @@ const enHome = localePath('en', '/');
         <slot />
       </main>
     </div>
+    <Footer lang={lang} />
+    <script>
+      import '../scripts/shell/zoom';
+    </script>
   </body>
 </html>

@@ -67,3 +67,5 @@ function init(dialog: HTMLDialogElement, openers: HTMLButtonElement[]): void {
     opener?.focus();
   });
 }
+
+export {};

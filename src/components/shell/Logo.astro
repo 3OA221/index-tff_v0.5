@@ -1,0 +1,40 @@
+---
+/**
+ * Cube logo (spec 6.1.3): three faces, each a link. Without JavaScript the
+ * words are plain and centred; src/scripts/shell/logo.ts fits them to their
+ * faces and runs the effects.
+ */
+import { SITE_TITLE } from '../../config/site';
+import { localePath } from '../../lib/paths';
+import type { Lang } from '../../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const faces = [
+  { key: 'text', href: localePath(lang, '/#about') },
+  { key: 'forma', href: localePath(lang, '/#works') },
+  { key: 'funkce', href: '#footer' },
+] as const;
+---
+
+<nav class="logo" aria-label={SITE_TITLE} data-logo>
+  <div class="logo__stage">
+    <div class="logo__cube">
+      {
+        faces.map((f) => (
+          <a class={`face face--${f.key}`} href={f.href} aria-label={f.key} data-face={f.key}>
+            <span class="face__plain" aria-hidden="true">
+              {f.key}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</nav>
+
+<script>
+  import '../../scripts/shell/logo';
+</script>

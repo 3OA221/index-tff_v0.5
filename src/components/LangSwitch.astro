@@ -10,49 +10,35 @@ interface Props {
 const { lang, path } = Astro.props;
 ---
 
-<nav class="lang-switch" aria-label={ui[lang].language}>
-  {
-    LANGS.map((l) => (
-      <a
-        class="lang-switch__btn"
-        href={localePath(l, path)}
-        hreflang={l}
-        lang={l}
-        aria-label={ui[l].langName}
-        aria-current={l === lang ? 'page' : undefined}
-        data-lang-link={l}
-      >
-        {ui[l].langShort}
-      </a>
-    ))
-  }
-</nav>
+<div class="side-switch" data-switch>
+  <nav class="lang-switch" aria-label={ui[lang].language}>
+    {
+      LANGS.map((l) => (
+        <a
+          class="lang-switch__btn"
+          href={localePath(l, path)}
+          hreflang={l}
+          lang={l}
+          aria-label={ui[l].langName}
+          aria-current={l === lang ? 'page' : undefined}
+          data-lang-link={l}
+        >
+          {ui[l].langShort}
+        </a>
+      ))
+    }
+  </nav>
+  {/* White copy, clipped to the part of the switch the footer covers. Not interactive. */}
+  <div class="lang-switch lang-switch--copy" aria-hidden="true" inert data-switch-copy>
+    {
+      LANGS.map((l) => (
+        <span class:list={['lang-switch__btn', { 'is-current': l === lang }]}>{ui[l].langShort}</span>
+      ))
+    }
+  </div>
+</div>
 
 <script>
   import '../scripts/lang-switch';
+  import '../scripts/shell/switch-copy';
 </script>
-
-<style>
-  .lang-switch {
-    display: flex;
-  }
-  .lang-switch__btn {
-    display: grid;
-    place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid var(--ink);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    text-decoration: none;
-    color: var(--ink);
-    background: transparent;
-  }
-  .lang-switch__btn + .lang-switch__btn {
-    border-left: 0;
-  }
-  .lang-switch__btn[aria-current='page'] {
-    background: var(--ink);
-    color: var(--surface);
-  }
-</style>

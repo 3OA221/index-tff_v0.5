@@ -25,7 +25,7 @@ const links = [
 const showOriginalTitle = p.title.cs !== p.title.en && lang === 'en';
 ---
 
-<Base lang={lang} title={workTitle(p)} path={workPath(p.id)}>
+<Base lang={lang} title={workTitle(p)} path={workPath(p.id)} kind="work">
   <article class="work">
     <nav class="work-nav" aria-label={t.projects}>
       <a class="work-nav__link" href={localePath(lang, '/#works')}

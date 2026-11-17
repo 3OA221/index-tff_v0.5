@@ -59,6 +59,26 @@ export const ui = {
     openNewTab: 'Otevřít obrázek na nové kartě',
     enlarge: 'Zvětšit obrázek {n}',
     imageN: 'Obrázek {n}',
+    announcements: 'Aktuality',
+    footerContact: 'Kontakt',
+    contactLines: [
+      'Ateliér TFF, místnost 334',
+      'Fakulta umění, OU',
+      'Černá louka 3398',
+      'Moravská Ostrava',
+    ],
+    footerUniversity: 'Univerzita',
+    universityLines: [
+      'Grafický design a vizuální komunikace',
+      'Ostravská univerzita',
+      'Fakulta umění',
+      'Katedra grafiky a kresby',
+    ],
+    footerInstructors: 'Instruktoři',
+    footerPast: 'Dřívější spolupráce',
+    pastText: 'Galerie PLATO, sborník Oáza a kniha kolektivu Tiqqun s galerií Display.',
+    draftVersion: 'Neoficiální pracovní verze {version}, build {build}',
+    initiative: 'Studentská iniciativa',
   },
   en: {
     skip: 'Skip to content',
@@ -110,8 +130,43 @@ export const ui = {
     openNewTab: 'Open image in a new tab',
     enlarge: 'Enlarge image {n}',
     imageN: 'Image {n}',
+    announcements: 'Announcements',
+    footerContact: 'Contact',
+    contactLines: [
+      'TFF Atelier, Room 334',
+      'Faculty of Fine Arts, OU',
+      'Černá louka 3398',
+      'Moravská Ostrava',
+    ],
+    footerUniversity: 'University',
+    universityLines: [
+      'Graphic Design and Visual Communication',
+      'University of Ostrava',
+      'Faculty of Fine Arts',
+      'Department of Graphics and Drawing',
+    ],
+    footerInstructors: 'Instructors',
+    footerPast: 'Past collaborations',
+    pastText:
+      'PLATO Gallery, the Oáza anthology and a book by the Tiqqun collective with the Display gallery.',
+    draftVersion: 'Unofficial working draft {version}, build {build}',
+    initiative: 'Student initiative',
   },
 } as const satisfies Record<Lang, Record<string, string | readonly string[]>>;
+
+/** Instructors (the same in both languages). */
+export const INSTRUCTORS = [
+  'doc. Justyna Szklarczyk-Lauer',
+  'MgA. Matěj Doležel',
+  'MgA. Jakub Adamec, Ph.D.',
+];
+
+/** Footer links (spec 6.1.7). */
+export const CONTACT = {
+  email: 'textformafunkce@gmail.com',
+  instagram: 'https://www.instagram.com/text_forma_funkce/',
+  university: 'https://fu.osu.cz/',
+};
 
 /** Fill `{name}` placeholders. */
 export function fmt(template: string, values: Record<string, string | number>): string {

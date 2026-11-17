@@ -1,11 +1,24 @@
 /* Base styles. Values from the spec, section 7. */
 
+/*
+ * The zoom state (spec 6.1.5): one animated number, 0 at rest, 1 in the works
+ * zone and on work pages. Colours, the side column, the gap and the logo size
+ * all follow it, so they move together. Set by src/scripts/shell/zoom.ts.
+ */
+@property --z {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
 :root {
+  --z: 0;
   --ink: #202020;
-  --surface: #dcdcdc;
+  --surface-rest: #dcdcdc;
+  --surface: color-mix(in srgb, #ffffff calc(var(--z) * 100%), #dcdcdc);
   --muted: #5a5a5a;
   --muted-on-ink: #b4b4b4;
-  --placeholder: #cbcbcb;
+  --placeholder: color-mix(in srgb, #ededed calc(var(--z) * 100%), #cbcbcb);
   --strip: #0a0a0a;
 
   --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -17,10 +30,40 @@
   --section-gap: clamp(64px, 8vw, 128px);
   --side-width: clamp(250px, 25vw, 430px);
   --side-gap: clamp(24px, 4vw, 72px);
-  --strip-height: 34px;
+  --strip-height: 0px;
   --line: 1px solid var(--ink);
 
+  /* Side column, gap and logo scale follow the zoom state (58%, 45%, 52%). */
+  --side-col: calc(var(--side-width) * (1 - 0.42 * var(--z)));
+  --gap-col: calc(var(--side-gap) * (1 - 0.55 * var(--z)));
+  --logo-scale: 1;
+  /* Cube edge: on wide screens (side column at rest minus the margin) / 1.55. */
+  --edge: clamp(96px, 28vw, 160px);
+
   color-scheme: light;
+  background: var(--surface);
+  transition: --z 0.9s ease;
+}
+:root.has-strip {
+  --strip-height: 34px;
+}
+:root.is-zoom {
+  --z: 1;
+}
+/* The zoom state never animates on resize or on first paint. */
+:root.no-zoom-anim {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    transition: none;
+  }
+}
+@media (min-width: 900px) {
+  :root {
+    --edge: calc((var(--side-width) - var(--margin)) / 1.55);
+    --logo-scale: calc(1 - 0.48 * var(--z));
+  }
 }
 
 *,
@@ -37,7 +80,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--surface);
+  background: transparent;
   color: var(--ink);
   font-family: var(--font-sans);
   font-weight: 400;
@@ -102,15 +145,27 @@ a {
   border: 0;
 }
 
+/* Faint static concrete grain behind the content, faded out as the page turns white. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.07'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+  opacity: calc(1 - var(--z));
+}
+
 /* Page frame: side column + main column on wide screens. */
 .frame {
-  padding: calc(var(--strip-height) + var(--margin)) var(--margin) var(--margin);
+  padding: calc(var(--strip-height) + var(--margin)) var(--margin) var(--section-gap);
 }
 @media (min-width: 900px) {
   .frame {
     display: grid;
-    grid-template-columns: var(--side-width) minmax(0, 1fr);
-    column-gap: var(--side-gap);
+    grid-template-columns: var(--side-col) minmax(0, 1fr);
+    column-gap: var(--gap-col);
   }
 }
 .frame__main:focus {

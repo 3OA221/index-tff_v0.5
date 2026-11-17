@@ -1,0 +1,47 @@
+---
+import { SITE_VERSION } from '../../config/site';
+import { CONTACT, INSTRUCTORS, fmt, ui, type Lang } from '../../i18n/ui';
+import { BUILD_ID } from '../../lib/build';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+---
+
+<footer class="footer" id="footer">
+  <div class="footer__inner">
+    <div class="footer__blocks">
+      <section class="footer__block" aria-labelledby="footer-contact">
+        <h2 class="footer__heading" id="footer-contact">{t.footerContact}</h2>
+        <p class="footer__text">{t.contactLines.map((l, i) => (i ? [<br />, l] : l))}</p>
+        <ul class="footer__links">
+          <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+          <li><a href={CONTACT.instagram} target="_blank" rel="noopener">Instagram</a></li>
+        </ul>
+      </section>
+      <section class="footer__block" aria-labelledby="footer-university">
+        <h2 class="footer__heading" id="footer-university">{t.footerUniversity}</h2>
+        <p class="footer__text">{t.universityLines.map((l, i) => (i ? [<br />, l] : l))}</p>
+        <ul class="footer__links">
+          <li><a href={CONTACT.university} target="_blank" rel="noopener">fu.osu.cz</a></li>
+        </ul>
+      </section>
+      <section class="footer__block" aria-labelledby="footer-instructors">
+        <h2 class="footer__heading" id="footer-instructors">{t.footerInstructors}</h2>
+        <p class="footer__text">{INSTRUCTORS.map((l, i) => (i ? [<br />, l] : l))}</p>
+        <div class="footer__links"></div>
+      </section>
+      <section class="footer__block" aria-labelledby="footer-past">
+        <h2 class="footer__heading" id="footer-past">{t.footerPast}</h2>
+        <p class="footer__text">{t.pastText}</p>
+        <div class="footer__links"></div>
+      </section>
+    </div>
+    <div class="footer__bottom">
+      <p>{fmt(t.draftVersion, { version: SITE_VERSION, build: BUILD_ID })}</p>
+      <p>{t.initiative}</p>
+    </div>
+  </div>
+</footer>
