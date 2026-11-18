@@ -216,3 +216,41 @@
   border-width: 0.6rem 0 0.6rem 1.05rem;
   border-color: transparent transparent transparent #fff;
 }
+
+/* ---------- PhotoSwipe icons: our thin-line set ----------
+   The default SVG icons on these four buttons are hidden; each button
+   shows one of our icons. The buttons, their places and their behaviour
+   are PhotoSwipe's own. The counter text is not changed. */
+.pswp .pswp__button--close,
+.pswp .pswp__button--arrow--prev,
+.pswp .pswp__button--arrow--next,
+.pswp .pswp__button--zoom {
+  color: #fff;
+}
+.pswp .pswp__button--close .pswp__icn,
+.pswp .pswp__button--arrow .pswp__icn,
+.pswp .pswp__button--zoom .pswp__icn {
+  display: none;
+}
+.pswp .pswp__button--close,
+.pswp .pswp__button--arrow,
+.pswp .pswp__button--zoom {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 24px 24px;
+}
+.pswp .pswp__button--close {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M5 5l14 14M19 5L5 19'/%3E%3C/svg%3E");
+}
+.pswp .pswp__button--arrow--prev {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M15 4l-8 8 8 8'/%3E%3C/svg%3E");
+}
+.pswp .pswp__button--arrow--next {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='square'%3E%3Cpath d='M9 4l8 8-8 8'/%3E%3C/svg%3E");
+}
+.pswp .pswp__button--zoom {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='square'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5.5 5.5M10.5 7.5v6M7.5 10.5h6'/%3E%3C/svg%3E");
+}
+.pswp .pswp--zoomed-in .pswp__button--zoom {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='square'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5.5 5.5M7.5 10.5h6'/%3E%3C/svg%3E");
+}
