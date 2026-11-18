@@ -1,5 +1,5 @@
 /* Work page, media and lightbox (spec 6.3, 6.4, 7). Global: classes are
-   toggled by src/scripts/gallery.ts (PhotoSwipe, styled below). */
+   toggled by src/scripts/gallery.ts. */
 
 .work-nav {
   display: flex;
@@ -215,43 +215,4 @@
   border-style: solid;
   border-width: 0.6rem 0 0.6rem 1.05rem;
   border-color: transparent transparent transparent #fff;
-}
-
-/* ---------- PhotoSwipe (image viewer) ---------- */
-
-.media__open {
-  text-decoration: none;
-}
-/* Backdrop: 92% black, frosted (spec 6.4). */
-.pswp__bg {
-  background: rgb(0 0 0 / 0.92);
-  -webkit-backdrop-filter: blur(28px) saturate(1.2);
-  backdrop-filter: blur(28px) saturate(1.2);
-}
-.pswp {
-  --pswp-icon-color: #fff;
-  --pswp-icon-color-secondary: #202020;
-  --pswp-icon-stroke-color: #fff;
-  --pswp-icon-stroke-width: 2px;
-  --pswp-placeholder-bg: #202020;
-}
-.pswp__counter {
-  font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  letter-spacing: 0.04em;
-}
-.pswp__button--open-tab {
-  color: #fff;
-  opacity: 0.7;
-}
-.pswp__button--open-tab:hover,
-.pswp__button--open-tab:focus-visible {
-  opacity: 1;
-}
-.pswp :focus-visible {
-  outline-color: #fff;
-}
-/* Page scroll locked while the viewer is open. */
-html:has(.pswp--open) {
-  overflow: hidden;
 }

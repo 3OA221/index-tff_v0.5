@@ -1,10 +1,9 @@
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 
 /**
- * Work page images in PhotoSwipe (spec 6.4, replaced by PhotoSwipe). Each
- * gallery's links point at the full-size file, so without JavaScript they
+ * Work page images in PhotoSwipe, with PhotoSwipe's default buttons and layout.
+ * Each gallery's links point at the full-size file, so without JavaScript they
  * still open the image. PhotoSwipe is loaded only when a page has a gallery.
- * Added: an "open in new tab" button for the current image (spec 6.4).
  */
 const galleries = document.querySelectorAll<HTMLElement>('[data-gallery]');
 
@@ -26,27 +25,6 @@ for (const gallery of galleries) {
 
   lightbox.on('afterInit', () => {
     lightbox.pswp?.element?.setAttribute('aria-label', d.galleryLabel ?? '');
-  });
-
-  lightbox.on('uiRegister', () => {
-    lightbox.pswp?.ui?.registerElement({
-      name: 'open-tab',
-      order: 9,
-      isButton: true,
-      tagName: 'a',
-      ariaLabel: d.openTabTitle,
-      title: d.openTabTitle,
-      html: '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M10 5H5v14h14v-5M13 4h7v7M20 4l-9 9" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
-      onInit: (el, pswp) => {
-        el.setAttribute('target', '_blank');
-        el.setAttribute('rel', 'noopener');
-        const update = () => {
-          el.setAttribute('href', String(pswp.currSlide?.data.src ?? '#'));
-        };
-        pswp.on('change', update);
-        update();
-      },
-    });
   });
 
   lightbox.init();
