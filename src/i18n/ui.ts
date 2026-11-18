@@ -59,6 +59,9 @@ export const ui = {
     openNewTab: 'Otevřít obrázek na nové kartě',
     enlarge: 'Zvětšit obrázek {n}',
     imageN: 'Obrázek {n}',
+    zoom: 'Přiblížit / oddálit',
+    fullscreen: 'Celá obrazovka',
+    playVideo: 'Přehrát video: {title}',
     announcements: 'Aktuality',
     footerContact: 'Kontakt',
     contactLines: [
@@ -130,6 +133,9 @@ export const ui = {
     openNewTab: 'Open image in a new tab',
     enlarge: 'Enlarge image {n}',
     imageN: 'Image {n}',
+    zoom: 'Zoom in / out',
+    fullscreen: 'Toggle fullscreen',
+    playVideo: 'Play video: {title}',
     announcements: 'Announcements',
     footerContact: 'Contact',
     contactLines: [

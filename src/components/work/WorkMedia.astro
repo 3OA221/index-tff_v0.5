@@ -25,18 +25,26 @@ const sizesHalf = '(min-width: 1100px) 23vw, (min-width: 900px) 32vw, (min-width
 {
   (hasImages || hasEmbeds || showPoster) && (
     <div class="media">
-      {hasEmbeds && !hasImages && <WorkVideos project={p} />}
+      {hasEmbeds && !hasImages && <WorkVideos lang={lang} project={p} />}
       {hasImages && (
-        <ul class:list={['media__images', { 'media__images--grid': grid }]} aria-label={t.images}>
+        <ul
+          class:list={['media__images', { 'media__images--grid': grid }]}
+          aria-label={t.images}
+          data-gallery
+          data-close-title={t.close}
+          data-zoom-title={t.zoom}
+          data-fullscreen-title={t.fullscreen}
+          data-prev-title={t.previousLabel}
+          data-next-title={t.nextLabel}
+          data-open-tab-title={t.openNewTab}
+        >
           {items.map(({ image, full }, i) => (
             <li class:list={['media__item', { 'media__item--full': full }]}>
-              <button
-                type="button"
+              <a
                 class="media__open"
-                data-lightbox-index={i}
-                data-full={imgPath(image.src)}
-                data-w={image.w}
-                data-h={image.h}
+                href={imgPath(image.src)}
+                data-pswp-width={image.w}
+                data-pswp-height={image.h}
               >
                 <span class="visually-hidden">{fmt(t.enlarge, { n: i + 1 })}</span>
                 <img
@@ -50,12 +58,12 @@ const sizesHalf = '(min-width: 1100px) 23vw, (min-width: 900px) 32vw, (min-width
                   loading={i < 2 ? 'eager' : 'lazy'}
                   decoding="async"
                 />
-              </button>
+              </a>
             </li>
           ))}
         </ul>
       )}
-      {hasEmbeds && hasImages && <WorkVideos project={p} />}
+      {hasEmbeds && hasImages && <WorkVideos lang={lang} project={p} />}
       {showPoster && (
         <div class="media__poster">
           <img
@@ -72,3 +80,7 @@ const sizesHalf = '(min-width: 1100px) 23vw, (min-width: 900px) 32vw, (min-width
     </div>
   )
 }
+
+<script>
+  import '../../scripts/gallery';
+</script>

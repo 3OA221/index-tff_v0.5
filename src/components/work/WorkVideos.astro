@@ -1,22 +1,35 @@
 ---
+import { fmt, ui, type Lang } from '../../i18n/ui';
+import { imgPath } from '../../lib/paths';
 import type { Project } from '../../lib/projects';
 
 interface Props {
+  lang: Lang;
   project: Project;
 }
-const { project: p } = Astro.props;
+const { lang, project: p } = Astro.props;
+const t = ui[lang];
+// The project's own cover is the poster: no YouTube image is requested on page load.
+const poster = imgPath(p.media.cover.src);
 ---
 
 {
   p.media.videoEmbed.map((id) => (
     <div class="media__video">
-      <iframe
-        src={`https://www.youtube-nocookie.com/embed/${id}`}
-        title={`YouTube: ${p.title.cs}`}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen></iframe>
+      <lite-youtube
+        videoid={id}
+        playlabel={fmt(t.playVideo, { title: p.title[lang] })}
+        style={`background-image: url('${poster}')`}
+      >
+        <a class="lyt-playbtn" href={`https://www.youtube.com/watch?v=${id}`} rel="noopener" target="_blank">
+          <span class="lyt-visually-hidden">{fmt(t.playVideo, { title: p.title[lang] })}</span>
+        </a>
+      </lite-youtube>
     </div>
   ))
 }
+
+<script>
+  import 'lite-youtube-embed/src/lite-yt-embed.css';
+  import 'lite-youtube-embed';
+</script>

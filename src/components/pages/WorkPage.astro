@@ -1,8 +1,8 @@
 ---
 import '../../styles/work.css';
+import 'photoswipe/style.css';
 import Base from '../../layouts/Base.astro';
 import Description from '../work/Description.astro';
-import Lightbox from '../work/Lightbox.astro';
 import WorkMedia from '../work/WorkMedia.astro';
 import { studyLabel, ui, type Lang } from '../../i18n/ui';
 import { localePath, workPath } from '../../lib/paths';
@@ -106,5 +106,4 @@ const showOriginalTitle = p.title.cs !== p.title.en && lang === 'en';
       <WorkMedia lang={lang} project={p} />
     </div>
   </article>
-  {p.media.images.length > 0 && <Lightbox lang={lang} count={p.media.images.length} />}
 </Base>
