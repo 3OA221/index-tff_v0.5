@@ -24,6 +24,10 @@ for (const gallery of galleries) {
     arrowNextTitle: d.nextTitle,
   });
 
+  lightbox.on('afterInit', () => {
+    lightbox.pswp?.element?.setAttribute('aria-label', d.galleryLabel ?? '');
+  });
+
   lightbox.on('uiRegister', () => {
     lightbox.pswp?.ui?.registerElement({
       name: 'open-tab',
