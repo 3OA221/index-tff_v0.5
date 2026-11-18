@@ -254,3 +254,9 @@
 .pswp .pswp--zoomed-in .pswp__button--zoom {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='square'%3E%3Ccircle cx='10.5' cy='10.5' r='6'/%3E%3Cpath d='M15 15l5.5 5.5M7.5 10.5h6'/%3E%3C/svg%3E");
 }
+
+/* Counter text sized to the height of the icons (24px glyphs). Text only. */
+.pswp .pswp__counter {
+  font-size: 1.5rem;
+  line-height: 1;
+}
