@@ -47,5 +47,3 @@ for (const gallery of galleries) {
 
   lightbox.init();
 }
-
-export {};
